@@ -132,7 +132,7 @@ angular.module('wotApp', ['wotServices'])
 			var rSpot = calculateExpected(tank.all.spotted, battles, expectedValues.expSpot);
 			var rFrag = calculateExpected(tank.all.frags, battles, expectedValues.expFrag);
 			var rDef = calculateExpected(tank.all.dropped_capture_points, battles, expectedValues.expDef);
-			var rWin = calculateExpected(tank.all.wins, battles, expectedValues.expWinRate);
+			var rWin = ((tank.all.wins / battles) * 100) / expectedValues.expWinRate;
 
 			// step 2
 			var rWinc = Math.max(0, (rWin - 0.71) / (1 - 0.71));
