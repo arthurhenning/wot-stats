@@ -4,7 +4,7 @@ angular.module('wotApp', ['wotServices'])
 
 	var clusters = {
 		'EU': {
-			apiAddress: 'http://api.worldoftanks.eu',
+			apiAddress: 'https://api.worldoftanks.eu',
 			applicationId: 'd0a293dc77667c9328783d489c8cef73'
 		}
 	};
