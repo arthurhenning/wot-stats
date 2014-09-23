@@ -1,0 +1,83 @@
+<html ng-app="wotApp">
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+	<script src="app.js"></script>
+	<script src="expected_values_service.js"></script>
+</head>
+<body ng-controller="PlayerController">
+
+	<form ng-submit="searchPlayer()">
+		Player name: <input type="text" ng-model="playerName">
+		<input type="submit">
+	</form>
+	<div ng-if="playerNotFound === false">
+		<table border="1">
+			<tr>
+				<th></th>
+				<th>Nickname</th>
+			</tr>
+			<tr ng-repeat="player in playerSearchList.data">
+				<td>{{$index + 1}}</td>
+				<td>
+					<a href ng-click="getPlayerRatings(player.account_id)">{{player.nickname}}</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div ng-if="playerNotFound === true">
+		<label>
+			Player not found.
+		</label>
+	</div>
+	<div ng-show="playerRatingsFound">
+		<h1>Ratings</h1>
+		Time period: <select ng-options="period as period for period in periods" ng-model="chosenPeriod" ng-change="getPlayerRatings()"></select>
+		day(s)
+		<table border="1">
+			<tr>
+				<th></th>
+				<th>Value</th>
+				<th>Rank</th>
+				<th>Delta</th>
+			</tr>
+			<tr ng-repeat="(key, stat) in playerStats" ng-show="stat.value || stat.rank || stat.rank_delta">
+				<td><strong>{{key}}</strong></td>
+				<td>{{stat.value}}</td>
+				<td>{{stat.rank}}</td>
+				<td>{{stat.rank_delta}}</td>
+			</tr>
+		</table>
+		<hr>
+		<h1>WN8</h1>
+		<h2>{{overallWn8 | number:2}}</h2>
+		<hr>
+		<h1>Vehicles</h1>
+		<table border="1">
+			<tr>
+				<th></th>
+				<th>Tank name</th>
+				<th>Battles</th>
+				<th>Winrate</th>
+				<th>Tier</th>
+				<th>Mark of Mastery</th>
+				<th>Average damage</th>
+				<th>Average XP</th>
+				<th>Maximum XP</th>
+				<th>WN8</th>
+			</tr>
+			<tr ng-repeat="tank in playerTanks | orderBy:'-all.battles'">
+				<td>{{$index + 1}}</td>
+				<td>{{allTanks[tank.tank_id].short_name_i18n}}</td>
+				<td>{{tank.all.battles}}</td>
+				<td>{{(tank.all.wins / tank.all.battles) * 100 | number:2}}%</td>
+				<td>{{allTanks[tank.tank_id].level}}</td>
+				<td>{{getMasteryMarkById(tank.mark_of_mastery)}}</td>
+				<td>{{(tank.all.damage_dealt / tank.all.battles) | number:0}}</td>
+				<td>{{(tank.all.xp / tank.all.battles) | number:0}}</td>
+				<td>{{tank.max_xp}}</td>
+				<td>{{tank.wn8 | number:0}}</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
