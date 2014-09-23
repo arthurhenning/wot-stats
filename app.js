@@ -16,6 +16,8 @@ angular.module('wotApp', ['wotServices'])
 
 	var expectedTankValues = ExpectedValuesService.values;
 
+	var allTanks = null;
+
 	$scope.searchPlayer = function () {
 		$scope.playerRatingsFound = false;
 
@@ -50,13 +52,6 @@ angular.module('wotApp', ['wotServices'])
 		});
 	};
 
-	$scope.getTankNameById = function (tankId) {
-		if ($scope.allTanks[tankId]) {
-			return $scope.allTanks[tankId].short_name_i18n;
-		}
-		return null;
-	};
-
 	$scope.getMasteryMarkById = function (masteryId) {
 		var masteyMark = 'None';
 		switch(masteryId) {
@@ -72,14 +67,28 @@ angular.module('wotApp', ['wotServices'])
 		return masteyMark;
 	};
 
+	$scope.sort = function (sortCriteria) {
+		if ($scope.sortCriteria === sortCriteria) {
+			$scope.sortReverse = !$scope.sortReverse;
+		} else {
+			$scope.sortCriteria = sortCriteria;
+			$scope.sortReverse = true;
+		}
+	}
+
 	var getPlayerTanks = function () {
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/tanks/stats/?application_id=' + clusters['EU'].applicationId + '&account_id=' + $scope.accountId})
 		.success(function(data, status, headers, config) {
 			$scope.playerTanks = data.data[$scope.accountId];
 
-			// calculate wn8 for each tank
+			// calculate wn8 and stats for each tank
 			for (var i = 0; i < $scope.playerTanks.length; i++) {
 				$scope.playerTanks[i].wn8 = calculateWn8($scope.playerTanks[i]);
+				$scope.playerTanks[i].winrate = calculateWinrate($scope.playerTanks[i]);
+				$scope.playerTanks[i].average_damage = calculateAverageDamage($scope.playerTanks[i]);
+				$scope.playerTanks[i].average_xp = calculateAverageXp($scope.playerTanks[i]);
+				$scope.playerTanks[i].level = allTanks[$scope.playerTanks[i].tank_id].level;
+				$scope.playerTanks[i].name = allTanks[$scope.playerTanks[i].tank_id].short_name_i18n;
 			}
 			calculateOverallWn8();
 		})
@@ -91,7 +100,7 @@ angular.module('wotApp', ['wotServices'])
 	var getAllTanks = function () {
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/encyclopedia/tanks/?application_id=' + clusters['EU'].applicationId})
 		.success(function(data, status, headers, config) {
-			$scope.allTanks = data.data;
+			allTanks = data.data;
 		})
 		.error(function(data, status, headers, config) {
 			// all tanks error
@@ -138,6 +147,18 @@ angular.module('wotApp', ['wotServices'])
 		return wn8;
 	};
 
+	var calculateWinrate = function (tank) {
+		return (tank.all.wins / tank.all.battles) * 100;
+	};
+
+	var calculateAverageDamage = function (tank) {
+		return tank.all.damage_dealt;
+	};
+
+	var calculateAverageXp = function (tank) {
+		return tank.all.xp / tank.all.battles;
+	};
+
 	var calculateOverallWn8 = function () {
 		if ($scope.playerTanks) {
 			var overallWn8 = 0;
@@ -151,6 +172,7 @@ angular.module('wotApp', ['wotServices'])
 			$scope.overallWn8 = overallWn8 / totalWn8Battles;
 		}
 	};
-
+	$scope.sortCriteria = 'all.battles';
+	$scope.sortReverse = true;
 	getAllTanks();
 });

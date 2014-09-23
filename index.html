@@ -43,8 +43,8 @@
 			<tr ng-repeat="(key, stat) in playerStats" ng-show="stat.value || stat.rank || stat.rank_delta">
 				<td><strong>{{key}}</strong></td>
 				<td>{{stat.value}}</td>
-				<td>{{stat.rank}}</td>
-				<td>{{stat.rank_delta}}</td>
+				<td>{{stat.rank | number:0}}</td>
+				<td>{{stat.rank_delta | number:0}}</td>
 			</tr>
 		</table>
 		<hr>
@@ -55,25 +55,25 @@
 		<table border="1">
 			<tr>
 				<th></th>
-				<th>Tank name</th>
-				<th>Battles</th>
-				<th>Winrate</th>
-				<th>Tier</th>
-				<th>Mark of Mastery</th>
-				<th>Average damage</th>
-				<th>Average XP</th>
-				<th>Maximum XP</th>
-				<th>WN8</th>
+				<th><a href ng-click="sort('name')">Tank name</a></th>
+				<th><a href ng-click="sort('all.battles')">Battles</a></th>
+				<th><a href ng-click="sort('winrate')">Winrate</a></th>
+				<th><a href ng-click="sort('level')">Tier</a></th>
+				<th><a href ng-click="sort('mark_of_mastery')">Mark of Mastery</a></th>
+				<th><a href ng-click="sort('average_damage')">Average damage</a></th>
+				<th><a href ng-click="sort('average_xp')">Average XP</a></th>
+				<th><a href ng-click="sort('max_xp')">Maximum XP</a></th>
+				<th><a href ng-click="sort('wn8')">WN8</a></th>
 			</tr>
-			<tr ng-repeat="tank in playerTanks | orderBy:'-all.battles'">
+			<tr ng-repeat="tank in playerTanks | orderBy:sortCriteria:sortReverse" ng-if="tank.all.battles">
 				<td>{{$index + 1}}</td>
-				<td>{{allTanks[tank.tank_id].short_name_i18n}}</td>
+				<td>{{tank.name}}</td>
 				<td>{{tank.all.battles}}</td>
-				<td>{{(tank.all.wins / tank.all.battles) * 100 | number:2}}%</td>
-				<td>{{allTanks[tank.tank_id].level}}</td>
+				<td>{{tank.winrate | number:2}}%</td>
+				<td>{{tank.level}}</td>
 				<td>{{getMasteryMarkById(tank.mark_of_mastery)}}</td>
-				<td>{{(tank.all.damage_dealt / tank.all.battles) | number:0}}</td>
-				<td>{{(tank.all.xp / tank.all.battles) | number:0}}</td>
+				<td>{{tank.average_damage | number:0}}</td>
+				<td>{{tank.average_xp | number:0}}</td>
 				<td>{{tank.max_xp}}</td>
 				<td>{{tank.wn8 | number:0}}</td>
 			</tr>
