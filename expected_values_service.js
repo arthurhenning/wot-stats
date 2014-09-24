@@ -1,8 +1,7 @@
-angular.module('wotServices', [])
+angular.module('wotServices.expectedValues', [])
 
 .factory('ExpectedValuesService', function() {
-  	return {
-      	values: [
+	var expectedTankValues = [
 		    {"IDNum": "1", "expFrag": "1.12", "expDamage": "520.70", "expSpot": "1.46", "expDef": "1.11", "expWinRate": "55.07"},
 		    {"IDNum": "17", "expFrag": "1.22", "expDamage": "582.54", "expSpot": "1.36", "expDef": "0.96", "expWinRate": "54.99"},
 		    {"IDNum": "33", "expFrag": "1.34", "expDamage": "598.77", "expSpot": "1.54", "expDef": "1.20", "expWinRate": "55.36"},
@@ -352,6 +351,19 @@ angular.module('wotServices', [])
 		    {"IDNum": "64065", "expFrag": "0.95", "expDamage": "1254.97", "expSpot": "1.52", "expDef": "1.08", "expWinRate": "50.23"},
 		    {"IDNum": "64561", "expFrag": "1.00", "expDamage": "1323.93", "expSpot": "1.35", "expDef": "0.86", "expWinRate": "53.74"},
 		    {"IDNum": "64817", "expFrag": "0.58", "expDamage": "492.99", "expSpot": "2.96", "expDef": "0.62", "expWinRate": "53.16"}
-		]
+	];
+
+	var getExpectedValuesByTankId = function (tankId) {
+		for (var i = 0; i < expectedTankValues.length; i++) {
+			if (tankId == expectedTankValues[i].IDNum) {
+				return expectedTankValues[i];
+			}
+		}
+		return null;
+	};
+
+	// public API
+  	return {
+  		getExpectedValuesByTankId: getExpectedValuesByTankId
   	};
 });
