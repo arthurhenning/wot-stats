@@ -81,7 +81,6 @@ angular.module('wotApp', ['wotServices.wn8'])
 	var getPlayerTanks = function () {
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/tanks/stats/?application_id=' + clusters['EU'].applicationId + '&account_id=' + $scope.accountId})
 		.success(function(data, status, headers, config) {
-			console.log('playerTanks', data);
 			$scope.playerTanks = data.data[$scope.accountId];
 
 			// calculate wn8 and stats for each tank
