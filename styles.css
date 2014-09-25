@@ -1,0 +1,27 @@
+.color-very-bad {
+	color: #000000;
+}
+.color-bad {
+	color: #cd3333;
+}
+.color-below-average {
+	color: #d77900;
+}
+.color-average {
+	color: #d7b600;
+}
+.color-good {
+	color: #6d9521;
+}
+.color-very-good {
+	color: #4c762e;
+}
+.color-great {
+	color: #4a92b7;
+}
+.color-unicum {
+	color: #83579d;
+}
+.color-super-unicum {
+	color: #5a3175;
+}

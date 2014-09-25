@@ -21,8 +21,12 @@ angular.module('wotApp', ['wotServices.wn8'])
 
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/account/list/?application_id=' + clusters['EU'].applicationId + '&search=' + $scope.playerName})
 		.success(function(data, status, headers, config) {
-			$scope.playerSearchList = data;
-			$scope.playerNotFound = false;
+			if (data.status !== "error" && data.data.length) {
+				$scope.playerSearchList = data;
+				$scope.playerNotFound = false;
+			} else {
+				$scope.playerNotFound = true;
+			}
 		})
 		.error(function(data, status, headers, config) {
 			$scope.playerNotFound = true;
@@ -77,6 +81,7 @@ angular.module('wotApp', ['wotServices.wn8'])
 	var getPlayerTanks = function () {
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/tanks/stats/?application_id=' + clusters['EU'].applicationId + '&account_id=' + $scope.accountId})
 		.success(function(data, status, headers, config) {
+			console.log('playerTanks', data);
 			$scope.playerTanks = data.data[$scope.accountId];
 
 			// calculate wn8 and stats for each tank
