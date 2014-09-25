@@ -22,23 +22,24 @@
 			<tr ng-repeat="player in playerSearchList.data">
 				<td>{{$index + 1}}</td>
 				<td>
-					<a href ng-click="getPlayerRatings(player.account_id)">{{player.nickname}}</a>
+					<a href ng-click="getPlayerRatings(player.account_id, player.nickname)">{{player.nickname}}</a>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<div ng-if="playerNotFound === true">
-		<label>
+		<label class="color-bad">
 			Player not found.
 		</label>
 	</div>
 	<div ng-show="playerRatingsFound">
 		<hr>
-		<h1>Ratings</h1>
-		Time period: <select ng-options="period as period for period in periods" ng-model="chosenPeriod" ng-change="getPlayerRatings()"></select>
-		day(s)
+		<h1>Ratings of {{playerNickname}}</h1>
+		<div class="period-select">
+			Time period: <select ng-options="period as period for period in periods" ng-model="chosenPeriod" ng-change="getPlayerRatings()"></select> day(s)
+		</div>
 		<table border="1">
-			<tr>
+			<tr ng-show="playerStats">
 				<th></th>
 				<th>Value</th>
 				<th>Rank</th>
@@ -50,6 +51,7 @@
 				<td>{{stat.rank | number:0}}</td>
 				<td>{{stat.rank_delta | number:0}}</td>
 			</tr>
+			<span ng-show="!playerStats" class="color-below-average">No battles for this time period.</span>
 		</table>
 		<hr>
 		<h1>WN8</h1>
@@ -81,7 +83,7 @@
 				<th><a href ng-click="sort('max_xp')">Maximum XP</a></th>
 				<th><a href ng-click="sort('wn8')">WN8</a></th>
 			</tr>
-			<tr ng-repeat="tank in playerTanks | orderBy:sortCriteria:sortReverse" ng-if="tank.all.battles">
+			<tr ng-repeat="tank in playerTanks | orderBy:sortCriteria:sortReverse" ng-if="tank.all.battles" ng-class-even="'even-row'">
 				<td>{{$index + 1}}</td>
 				<td>{{tank.name}}</td>
 				<td ng-class="{
@@ -121,6 +123,9 @@
 				</td>
 			</tr>
 		</table>
+	</div>
+	<div ng-show="playerRatingsFound === false" class="color-bad">
+		Player ratings not found.
 	</div>
 </body>
 </html>

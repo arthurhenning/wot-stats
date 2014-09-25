@@ -17,8 +17,6 @@ angular.module('wotApp', ['wotServices.wn8'])
 	var allTanks = null;
 
 	$scope.searchPlayer = function () {
-		$scope.playerRatingsFound = false;
-
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/account/list/?application_id=' + clusters['EU'].applicationId + '&search=' + $scope.playerName})
 		.success(function(data, status, headers, config) {
 			if (data.status !== "error" && data.data.length) {
@@ -33,7 +31,7 @@ angular.module('wotApp', ['wotServices.wn8'])
 		});
 	};
 
-	$scope.getPlayerRatings = function (accountId) {
+	$scope.getPlayerRatings = function (accountId, playerNickname) {
 
 		if (!$scope.chosenPeriod) {
 			$scope.chosenPeriod = $scope.periods[0];
@@ -48,6 +46,9 @@ angular.module('wotApp', ['wotServices.wn8'])
 			$scope.playerStats = data.data[$scope.accountId];
 			getPlayerTanks();
 			$scope.playerRatingsFound = true;
+			if (playerNickname) {
+				$scope.playerNickname = playerNickname;
+			}
 		})
 		.error(function(data, status, headers, config) {
 			$scope.playerRatingsFound = false;

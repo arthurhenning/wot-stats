@@ -1,3 +1,23 @@
+body {
+	text-align: center;
+}
+table {
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	border-width: 2px;
+	margin-bottom: 20px;
+}
+th {
+	background-color: #aeaeae;
+	padding: 5px;
+}
+td {
+	padding: 5px;
+}
+.period-select {
+	margin-bottom: 10px;
+}
 .color-very-bad {
 	color: #000000;
 }
@@ -24,4 +44,7 @@
 }
 .color-super-unicum {
 	color: #5a3175;
+}
+.even-row {
+	background-color: #f6f6f6;
 }
