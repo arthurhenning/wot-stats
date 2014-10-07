@@ -25,7 +25,13 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 			// step 3
 			var wn8 = 980 * rDamageEc + 210 * rDamageEc * rFragc + 155 * rFragc * rSpotc + 75 * rDefc * rFragc + 145 * Math.min(1.8, rWinc);
 		}
-		return Math.round(wn8);
+		var roundedWn8 = Math.round(wn8);
+		var wn8Return = {
+			wn8: wn8,
+			expectedWinrate: expectedValues.expWinRate,
+			expectedDamage: expectedValues.expDamage
+		};
+		return wn8Return;
 	};
 
 	var calculateOverallWn8 = function (playerTanks) {

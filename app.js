@@ -91,7 +91,11 @@ angular.module('wotApp', ['wotServices.wn8'])
 				$scope.playerTanks[i].average_xp = calculateAverageXp($scope.playerTanks[i]);
 				$scope.playerTanks[i].level = allTanks[$scope.playerTanks[i].tank_id].level;
 				$scope.playerTanks[i].name = allTanks[$scope.playerTanks[i].tank_id].short_name_i18n;
-				$scope.playerTanks[i].wn8 = Wn8Service.calculateTankWn8($scope.playerTanks[i]);
+				
+				var wn8Obj = Wn8Service.calculateTankWn8($scope.playerTanks[i]);
+				$scope.playerTanks[i].wn8 = wn8Obj.wn8;
+				$scope.playerTanks[i].expectedWinrate = wn8Obj.expectedWinrate;
+				$scope.playerTanks[i].expectedDamage = wn8Obj.expectedDamage;
 			}
 
 			// calculate overall wn8

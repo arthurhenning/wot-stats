@@ -8,7 +8,7 @@
 </head>
 <body ng-controller="PlayerController">
 	<h1>Search</h1>
-	<form ng-submit="searchPlayer()">
+	<form ng-submit="searchPlayer()" autocomplete="on">
 		Player name: <input type="text" ng-model="playerName" ng-required="true" autofocus>
 		<input type="submit" value="Search">
 	</form>
@@ -75,10 +75,12 @@
 				<th></th>
 				<th><a href ng-click="sort('name')">Tank name</a></th>
 				<th><a href ng-click="sort('all.battles')">Battles</a></th>
-				<th><a href ng-click="sort('winrate')">Winrate</a></th>
+				<th width="7%"><a href ng-click="sort('winrate')">Winrate</a></th>
+				<th width="7%"><a href ng-click="sort('expectedWinrate')">Expected winrate</a></th>
 				<th><a href ng-click="sort('level')">Tier</a></th>
 				<th><a href ng-click="sort('mark_of_mastery')">Mark of Mastery</a></th>
-				<th><a href ng-click="sort('average_damage')">Average damage</a></th>
+				<th width="10%"><a href ng-click="sort('average_damage')">Average damage</a></th>
+				<th width="10%"><a href ng-click="sort('expectedDamage')">Expected average damage</a></th>
 				<th><a href ng-click="sort('average_xp')">Average XP</a></th>
 				<th><a href ng-click="sort('max_xp')">Maximum XP</a></th>
 				<th><a href ng-click="sort('wn8')">WN8</a></th>
@@ -105,9 +107,17 @@
 					'color-super-unicum': tank.winrate >= 69}">
 					<strong>{{tank.winrate | number:2}}%</strong>
 				</td>
+				<td ng-class="{'color-bad': tank.winrate <= tank.expectedWinrate,
+					'color-good': tank.winrate > tank.expectedWinrate}">
+					<strong>{{tank.expectedWinrate}}%</strong>
+				</td>
 				<td>{{tank.level}}</td>
 				<td>{{getMasteryMarkById(tank.mark_of_mastery)}}</td>
 				<td>{{tank.average_damage | number:0}}</td>
+				<td ng-class="{'color-bad': tank.average_damage <= tank.expectedDamage,
+					'color-good': tank.average_damage > tank.expectedDamage}">
+					<strong>{{tank.expectedDamage | number:0}}</strong>
+				</td>
 				<td>{{tank.average_xp | number:0}}</td>
 				<td>{{tank.max_xp}}</td>
 				<td ng-class="{'color-very-bad': tank.wn8 < 300, 
