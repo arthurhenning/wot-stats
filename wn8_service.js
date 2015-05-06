@@ -83,10 +83,15 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 			return wn8;
 		}
 	};
+	
+	var getVersion = function () {
+		return ExpectedValuesService.getExpectedValuesVersion();
+	};
 
 	// public API
   	return {
   		calculateTankWn8: calculateTankWn8,
-  		calculateOverallWn8: calculateOverallWn8
+  		calculateOverallWn8: calculateOverallWn8,
+		expectedValuesVersion: getVersion
   	};
 }]);

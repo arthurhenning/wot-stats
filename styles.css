@@ -49,3 +49,6 @@ td {
 .even-row {
 	background-color: #f6f6f6;
 }
+h1 small {
+	font-size: 60%;
+}
