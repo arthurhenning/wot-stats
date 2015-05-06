@@ -100,6 +100,7 @@ angular.module('wotApp', ['wotServices.wn8'])
 
 			// calculate overall wn8
 			$scope.overallWn8 = Wn8Service.calculateOverallWn8($scope.playerTanks);
+			$scope.expectedValuesVersion = Wn8Service.expectedValuesVersion();
 		})
 		.error(function(data, status, headers, config) {
 			// player tanks error
