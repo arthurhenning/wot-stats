@@ -36,7 +36,7 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 
 	var calculateOverallWn8 = function (playerTanks) {
 		if (playerTanks) {
-			
+
 			var overallWn8 = 0;
 			var totalWn8Battles = 0;
 			var expDamage = 0, expSpot = 0, expFrag = 0, expDef = 0, expWins = 0;
@@ -83,15 +83,15 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 			return wn8;
 		}
 	};
-	
+
 	var getVersion = function () {
 		return ExpectedValuesService.getExpectedValuesVersion();
 	};
 
 	// public API
-  	return {
-  		calculateTankWn8: calculateTankWn8,
-  		calculateOverallWn8: calculateOverallWn8,
+	return {
+		calculateTankWn8: calculateTankWn8,
+		calculateOverallWn8: calculateOverallWn8,
 		expectedValuesVersion: getVersion
-  	};
+	};
 }]);
