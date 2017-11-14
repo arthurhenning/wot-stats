@@ -1,6 +1,10 @@
 angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 
 .factory('Wn8Service', ['ExpectedValuesService', function(ExpectedValuesService) {
+	
+	var getExpectedValues = function(origin) {
+		ExpectedValuesService.getExpectedValues(origin);
+	}
 
 	var calculateTankWn8 = function (tank) {
 		var tankId = tank.tank_id;
@@ -16,22 +20,24 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
 			var rWin = (tank.all.wins / battles * 100) / expectedValues.expWinRate;
 
 			// step 2
-			var rWinc = Math.max(0, 	(rWin - 0.71) / (1 - 0.71));
-			var rDamageEc = Math.max(0,	(rDamage - 0.22) / (1 - 0.22));
-			var rFragc = Math.max(0, 	Math.min(rDamageEc + 0.2, (rFrag - 0.12) / (1 - 0.12)));
-			var rSpotc = Math.max(0, 	Math.min(rDamageEc + 0.1, (rSpot - 0.38) / (1 - 0.38)));
-			var rDefc = Math.max(0, 	Math.min(rDamageEc + 0.1, (rDef - 0.10) / (1 - 0.10)));
+			var rWinc = Math.max(0, (rWin - 0.71) / (1 - 0.71));
+			var rDamageEc = Math.max(0, (rDamage - 0.22) / (1 - 0.22));
+			var rFragc = Math.max(0, Math.min(rDamageEc + 0.2, (rFrag - 0.12) / (1 - 0.12)));
+			var rSpotc = Math.max(0, Math.min(rDamageEc + 0.1, (rSpot - 0.38) / (1 - 0.38)));
+			var rDefc = Math.max(0, Math.min(rDamageEc + 0.1, (rDef - 0.10) / (1 - 0.10)));
 
 			// step 3
 			var wn8 = 980 * rDamageEc + 210 * rDamageEc * rFragc + 155 * rFragc * rSpotc + 75 * rDefc * rFragc + 145 * Math.min(1.8, rWinc);
+		
+			var roundedWn8 = Math.round(wn8);
+			var wn8Return = {
+				wn8: wn8,
+				expectedWinrate: expectedValues.expWinRate,
+				expectedDamage: expectedValues.expDamage
+			};
+			return wn8Return;
 		}
-		var roundedWn8 = Math.round(wn8);
-		var wn8Return = {
-			wn8: wn8,
-			expectedWinrate: expectedValues.expWinRate,
-			expectedDamage: expectedValues.expDamage
-		};
-		return wn8Return;
+		return null;
 	};
 
 	var calculateOverallWn8 = function (playerTanks) {
@@ -92,6 +98,7 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
   	return {
   		calculateTankWn8: calculateTankWn8,
   		calculateOverallWn8: calculateOverallWn8,
-		expectedValuesVersion: getVersion
+		expectedValuesVersion: getVersion,
+		getExpectedValues: getExpectedValues
   	};
 }]);
