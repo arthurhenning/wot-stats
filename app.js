@@ -81,9 +81,9 @@ angular.module('wotApp', ['wotServices.wn8'])
 				var tank = $scope.playerTanks[i],
 					tankInfo = allTanks[tank.tank_id];
 				
-					console.log('- - - - - - - - - - - - - - ');
-					console.log('tank_id', JSON.stringify(tank.tank_id));
-					console.log('tankInfo', tankInfo ? 'with info' : 'no tank info');
+					// console.log('- - - - - - - - - - - - - - ');
+					// console.log('tank_id', JSON.stringify(tank.tank_id));
+					// console.log('tankInfo', tankInfo ? 'with info' : 'no tank info');
 
 				if (tankInfo) {
 					// console.log('- - - - - - - - - - - - - - ');
@@ -116,7 +116,7 @@ angular.module('wotApp', ['wotServices.wn8'])
 			$scope.expectedValuesVersion = Wn8Service.expectedValuesVersion();
 
 			$scope.allMissingTanks = allMissingTanks;
-			console.log('allMissingTanks: ' + allMissingTanks.length, JSON.stringify(allMissingTanks));
+			//console.log('allMissingTanks: ' + allMissingTanks.length, JSON.stringify(allMissingTanks));
 
 			$scope.calculating = false;
 		})
