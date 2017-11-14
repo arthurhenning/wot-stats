@@ -73,22 +73,13 @@ angular.module('wotApp', ['wotServices.wn8'])
 		.success(function(data, status, headers, config) {
 			$scope.playerTanks = data.data[$scope.accountId];
 
-			//console.log('playerTanks', JSON.stringify($scope.playerTanks));
-			//console.log('allTanks', JSON.stringify(allTanks));
-
 			// calculate wn8 and stats for each tank
 			for (var i = 0; i < $scope.playerTanks.length; i++) {
 				var tank = $scope.playerTanks[i],
 					tankInfo = allTanks[tank.tank_id];
-				
-					// console.log('- - - - - - - - - - - - - - ');
-					// console.log('tank_id', JSON.stringify(tank.tank_id));
-					// console.log('tankInfo', tankInfo ? 'with info' : 'no tank info');
 
 				if (tankInfo) {
-					// console.log('- - - - - - - - - - - - - - ');
-					// console.log('tank', JSON.stringify(tank));
-					// console.log('tankInfo', JSON.stringify(tankInfo));
+					// might have be tanks that are no longer available
 
 					$scope.playerTanks[i].winrate = calculateWinrate(tank);
 					$scope.playerTanks[i].average_damage = calculateAverageDamage(tank);
@@ -116,8 +107,6 @@ angular.module('wotApp', ['wotServices.wn8'])
 			$scope.expectedValuesVersion = Wn8Service.expectedValuesVersion();
 
 			$scope.allMissingTanks = allMissingTanks;
-			//console.log('allMissingTanks: ' + allMissingTanks.length, JSON.stringify(allMissingTanks));
-
 			$scope.calculating = false;
 		})
 		.error(function(data, status, headers, config) {

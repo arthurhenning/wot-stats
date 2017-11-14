@@ -3,9 +3,6 @@ angular.module('wotServices.expectedValues', [])
 	.factory('ExpectedValuesService', ['$http', function ($http) {
 		var expectedTankValues = [];
 
-		// XVM https://modxvm.com/en/news/important-update-of-wn8/ --> https://static.modxvm.com/wn8-data-exp/json/wn8exp.json
-		// wnefficiency http://www.wnefficiency.net/wnexpected/
-
 		var getExpectedValues = function (origin) {
 			var useXvmValues = origin === 'xvm';
 			var expectedTankValuesUrl = useXvmValues ? 'expected_values/expected_tank_values.xvm.json' : 'expected_values/expected_tank_values.wnefficiency.json';

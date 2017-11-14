@@ -98,7 +98,7 @@ angular.module('wotServices.wn8', ['wotServices.expectedValues'])
   	return {
   		calculateTankWn8: calculateTankWn8,
   		calculateOverallWn8: calculateOverallWn8,
-		  expectedValuesVersion: getVersion,
-		  getExpectedValues: getExpectedValues
+  		expectedValuesVersion: getVersion,
+  		getExpectedValues: getExpectedValues
   	};
 }]);
