@@ -9,12 +9,10 @@ angular.module('wotApp', ['wotServices.wn8'])
 		}
 	};
 	var version = "2.0";
-
-	$scope.periods = [
-		'1', '7', '28', 'all'
-	];
-
-	var allTanks = null;
+	var allTanks = null, allMissingTanks = [];
+	
+	$scope.dataOrigin = 'xvm';
+	$scope.calculating = false;
 
 	$scope.searchPlayer = function () {
 		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/account/list/?application_id=' + clusters['EU'].applicationId + '&search=' + $scope.playerName})
@@ -32,27 +30,18 @@ angular.module('wotApp', ['wotServices.wn8'])
 	};
 
 	$scope.getPlayerRatings = function (accountId, playerNickname) {
-
-		if (!$scope.chosenPeriod) {
-			$scope.chosenPeriod = $scope.periods[0];
-		}
+		$scope.calculating = true;
 
 		if (accountId) {
 			$scope.accountId = accountId;
 		}
+		if (playerNickname) {
+			$scope.playerNickname = playerNickname;
+		}
 
-		$http({method: 'GET', url: clusters['EU'].apiAddress + '/' + version + '/ratings/accounts/?application_id=' + clusters['EU'].applicationId + '&account_id=' + $scope.accountId + '&type=' + $scope.chosenPeriod})
-		.success(function(data, status, headers, config) {
-			$scope.playerStats = data.data[$scope.accountId];
-			getPlayerTanks();
-			$scope.playerRatingsFound = true;
-			if (playerNickname) {
-				$scope.playerNickname = playerNickname;
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.playerRatingsFound = false;
-		});
+		$scope.playerRatingsFound = true;
+
+		getPlayerTanks();
 	};
 
 	$scope.getMasteryMarkById = function (masteryId) {
@@ -86,21 +75,39 @@ angular.module('wotApp', ['wotServices.wn8'])
 
 			// calculate wn8 and stats for each tank
 			for (var i = 0; i < $scope.playerTanks.length; i++) {
-				$scope.playerTanks[i].winrate = calculateWinrate($scope.playerTanks[i]);
-				$scope.playerTanks[i].average_damage = calculateAverageDamage($scope.playerTanks[i]);
-				$scope.playerTanks[i].average_xp = calculateAverageXp($scope.playerTanks[i]);
-				$scope.playerTanks[i].level = allTanks[$scope.playerTanks[i].tank_id].level;
-				$scope.playerTanks[i].name = allTanks[$scope.playerTanks[i].tank_id].short_name_i18n;
+				var tank = $scope.playerTanks[i],
+					tankInfo = allTanks[tank.tank_id];
+
+				if (tankInfo) {
+					// might have be tanks that are no longer available
+
+					$scope.playerTanks[i].winrate = calculateWinrate(tank);
+					$scope.playerTanks[i].average_damage = calculateAverageDamage(tank);
+					$scope.playerTanks[i].average_xp = calculateAverageXp(tank);
+					$scope.playerTanks[i].level = tankInfo.level;
+					$scope.playerTanks[i].name = tankInfo.short_name_i18n;
 				
-				var wn8Obj = Wn8Service.calculateTankWn8($scope.playerTanks[i]);
-				$scope.playerTanks[i].wn8 = wn8Obj.wn8;
-				$scope.playerTanks[i].expectedWinrate = wn8Obj.expectedWinrate;
-				$scope.playerTanks[i].expectedDamage = wn8Obj.expectedDamage;
+					var wn8Obj = Wn8Service.calculateTankWn8(tank);
+					if (wn8Obj) {
+						$scope.playerTanks[i].wn8 = wn8Obj.wn8;
+						$scope.playerTanks[i].expectedWinrate = wn8Obj.expectedWinrate;
+						$scope.playerTanks[i].expectedDamage = wn8Obj.expectedDamage;
+					} else {
+						$scope.playerTanks[i].wn8 = 0;
+						$scope.playerTanks[i].expectedWinrate = $scope.playerTanks[i].winrate;
+						$scope.playerTanks[i].expectedDamage = $scope.playerTanks[i].average_damage;
+					}
+				} else {
+					allMissingTanks.push(tank);
+				}
 			}
 
 			// calculate overall wn8
 			$scope.overallWn8 = Wn8Service.calculateOverallWn8($scope.playerTanks);
 			$scope.expectedValuesVersion = Wn8Service.expectedValuesVersion();
+
+			$scope.allMissingTanks = allMissingTanks;
+			$scope.calculating = false;
 		})
 		.error(function(data, status, headers, config) {
 			// player tanks error
@@ -132,4 +139,15 @@ angular.module('wotApp', ['wotServices.wn8'])
 	$scope.sortCriteria = 'all.battles';
 	$scope.sortReverse = true;
 	getAllTanks();
+
+	// setup expected values
+	Wn8Service.getExpectedValues($scope.dataOrigin);
+	
+	$scope.$watch('dataOrigin', function (newOrigin) {
+		Wn8Service.getExpectedValues($scope.dataOrigin);
+		if ($scope.playerRatingsFound) {
+			// recalculate
+			$scope.getPlayerRatings($scope.accountId, $scope.playerNickname);
+		}
+  });
 });
