@@ -9,7 +9,9 @@
 <body ng-controller="PlayerController">
 	<h1>Search</h1>
 	<form ng-submit="searchPlayer()" autocomplete="on">
-		Player name: <input type="text" ng-model="playerName" ng-required="true" autofocus>
+		Player name: <input type="text" ng-model="playerName" ng-required="true" autofocus />
+		<label for="data_type_1"><input type="radio" ng-model="dataOrigin" value="xvm" id="data_type_1" name="data_type" /> xvm</label>
+		<label for="data_type_2"><input type="radio" ng-model="dataOrigin" value="wnefficiency" id="data_type_2" name="data_type" /> wnefficiency</label>
 		<input type="submit" value="Search">
 	</form>
 	<div ng-if="playerNotFound === false">
@@ -34,26 +36,7 @@
 	</div>
 	<div ng-show="playerRatingsFound">
 		<hr>
-		<h1>Ratings of {{playerNickname}}</h1>
-		<div class="period-select">
-			Time period: <select ng-options="period as period for period in periods" ng-model="chosenPeriod" ng-change="getPlayerRatings()"></select> day(s)
-		</div>
-		<table border="1">
-			<tr ng-show="playerStats">
-				<th></th>
-				<th>Value</th>
-				<th>Rank</th>
-				<th>Delta</th>
-			</tr>
-			<tr ng-repeat="(key, stat) in playerStats" ng-show="stat.value || stat.rank || stat.rank_delta">
-				<td><strong>{{key}}</strong></td>
-				<td>{{stat.value}}</td>
-				<td>{{stat.rank | number:0}}</td>
-				<td>{{stat.rank_delta | number:0}}</td>
-			</tr>
-			<span ng-show="!playerStats" class="color-below-average">No battles for this time period.</span>
-		</table>
-		<hr>
+		<h1>Ratings of {{playerNickname}} <small class="color-bad" ng-show="calculating">calculating...</small></h1>
 		<h1>WN8 <small><a href="http://www.wnefficiency.net/" target="_blank">using v.{{expectedValuesVersion}}</a></small></h1>
 		<h2>
 			<span ng-class="{'color-very-bad': overallWn8 < 300, 
