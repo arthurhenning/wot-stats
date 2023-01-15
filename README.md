@@ -1,7 +1,7 @@
 WotStats
 ========
 
-World of Tanks helpful stats and WN8 calculcator built with AngularJS using the official WoT API's and wnefficiency/xvm expected tank values.
+World of Tanks helpful stats and WN8 calculcator built with AngularJS using the official WoT APIs and wnefficiency/xvm expected tank values.
 
 References:
 --------------
